@@ -1,9 +1,9 @@
-package jpa
+package com.myproject.backend.jpa
 
 import javax.persistence.*
 
 @Entity
-@Table(name = "roles")
+@Table(name = "role")
 data class Role(
 
     @Id

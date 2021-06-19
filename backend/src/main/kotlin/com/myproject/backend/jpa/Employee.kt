@@ -1,10 +1,10 @@
-package jpa
+package com.myproject.backend.jpa
 
 import javax.persistence.*
 
 @Entity
-@Table(name = "users")
-data class User(
+@Table(name = "employee")
+data class Employee(
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,14 +22,27 @@ data class User(
     @Column(name = "password")
     var password: String? = null,
 
+    @Column(name = "salary")
+    var salary: Int? = null,
+
+    @Column(name = "title")
+    var title: String? = null,
+
     @Column(name = "enabled")
     var enabled: Boolean = false,
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-        name = "users_roles",
-        joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
+        name = "employees_roles",
+        joinColumns = [JoinColumn(name = "employee_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "id")]
     )
-    var roles: Collection<Role>? = null
+    var roles: Collection<Role>? = null,
+
+    @ManyToOne
+    @JoinColumn(name="company_id")
+    var company: Company? = null,
+
+    @OneToMany(mappedBy = "employee")
+    var accounts: Collection<Account>? = null
 )

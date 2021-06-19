@@ -1,16 +1,16 @@
-package repositories
+package com.myproject.backend.repositories
 
-import jpa.User
+import com.myproject.backend.jpa.Employee
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.query.Param
 import java.util.*
 import javax.transaction.Transactional
 
-interface UserRepository: JpaRepository<User, Long> {
+interface EmployeeRepository: JpaRepository<Employee, Long> {
 
     fun existsByUsername(@Param("username") username: String): Boolean
 
-    fun findByUsername(@Param("username") username: String): Optional<User>
+    fun findByUsername(@Param("username") username: String): Optional<Employee>
 
     @Transactional
     fun deleteByUsername(@Param("username") username: String)

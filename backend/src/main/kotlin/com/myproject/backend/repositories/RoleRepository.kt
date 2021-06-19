@@ -1,6 +1,6 @@
-package repositories
+package com.myproject.backend.repositories
 
-import jpa.Role
+import com.myproject.backend.jpa.Role
 import org.springframework.data.repository.query.Param
 import org.springframework.data.jpa.repository.JpaRepository
 

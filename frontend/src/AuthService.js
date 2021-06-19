@@ -10,31 +10,23 @@ export default class AuthService {
     }
 
     async signin(username, password) {
-        const csrfToken = Cookies.get('csrftoken');
-        axios.defaults.xsrfCookieName = 'csrftoken';
-        axios.defaults.xsrfHeaderName = 'X-CSRFToken';
         const data = {
             username,
             password,
         };
         const res = await axios({
             method: 'post',
-            url: '/api/signin/',
+            url: '/api/auth/signin/',
             data,
-            headers: {
-                'X-CSRFToken': csrfToken,
-            },
         });
-        this.setToken(res.data.token);
+        console.log(res.data)
+        this.setToken(res.data.accessToken);
         this.setUsername(res.data.username);
-        this.setId(res.data.id);
+        // this.setId(res.data.id);
         return Promise.resolve(res);
     }
 
     async signup(username, password, first_name, last_name) {
-        const csrfToken = Cookies.get('csrftoken');
-        axios.defaults.xsrfCookieName = 'csrftoken';
-        axios.defaults.xsrfHeaderName = 'X-CSRFToken';
         const data = {
             username,
             password,
@@ -43,13 +35,11 @@ export default class AuthService {
         };
         const res = await axios({
             method: 'post',
-            url: '/api/signup/',
+            url: '/api/auth/signup/',
             data,
-            headers: {
-                'X-CSRFToken': csrfToken,
-            },
         });
-        this.setToken(res.data.token);
+        console.log(res.data)
+        this.setToken(res.data.accessToken);
         this.setUsername(res.data.username);
         this.setId(res.data.id);
         return Promise.resolve(res);

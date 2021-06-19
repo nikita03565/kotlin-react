@@ -1,4 +1,4 @@
-package config
+package com.myproject.backend.config
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
@@ -13,9 +13,9 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
-//import com.myproject.backend.jwt.JwtAuthEntryPoint
-//import com.myproject.backend.jwt.JwtAuthTokenFilter
-//import com.myproject.backend.service.UserDetailsServiceImpl
+import com.myproject.backend.jwt.JwtAuthEntryPoint
+import com.myproject.backend.jwt.JwtAuthTokenFilter
+import com.myproject.backend.service.UserDetailsServiceImpl
 
 
 @Configuration
@@ -23,11 +23,21 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 
+    @Autowired
+    internal var userDetailsService: UserDetailsServiceImpl? = null
+
+    @Autowired
+    private val unauthorizedHandler: JwtAuthEntryPoint? = null
+
     @Bean
     fun bCryptPasswordEncoder(): BCryptPasswordEncoder {
         return BCryptPasswordEncoder()
     }
 
+    @Bean
+    fun authenticationJwtTokenFilter(): JwtAuthTokenFilter {
+        return JwtAuthTokenFilter()
+    }
 
     @Throws(Exception::class)
     override fun configure(authenticationManagerBuilder: AuthenticationManagerBuilder) {

@@ -68,7 +68,7 @@ class SignIn extends Component {
                                     value={username}
 
                                     onChange={this.handleChange}
-                                    placeholder="Введите юзернейм"
+                                    placeholder="Enter username"
                                     required
                                 />
                                 <TextField
@@ -77,7 +77,7 @@ class SignIn extends Component {
                                     type="password"
 
                                     onChange={this.handleChange}
-                                    placeholder="Введите пароль"
+                                    placeholder="Enter password"
                                     required
                                 />
                                 <Button

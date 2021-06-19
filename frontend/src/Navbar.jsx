@@ -55,10 +55,7 @@ class Navbar extends Component {
                     >
                         <ul className="navbar-nav mr-auto">
                             <li className="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
-                                <NavLink className="nav-link" to="/">Главная</NavLink>
-                            </li>
-                            <li className="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
-                                <NavLink className="nav-link" to="/search">Поиск</NavLink>
+                                <NavLink className="nav-link" to="/">Home</NavLink>
                             </li>
                             <li className="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
                                 <NavLink className="nav-link" to='/users'>Пользователи</NavLink>
@@ -72,7 +69,7 @@ class Navbar extends Component {
                                     className="navbar-nav"
                                 >
                                     <li className="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
-                                        <NavLink className="nav-link" to={`/users/${id}`}><AccountCircleIcon/></NavLink>
+                                        <NavLink className="nav-link" to={`/users/me`}><AccountCircleIcon/></NavLink>
                                     </li>
                                     <div>
                                         <span

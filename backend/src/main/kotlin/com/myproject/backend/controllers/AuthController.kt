@@ -1,19 +1,16 @@
-package controllers
+package com.myproject.backend.controllers
 
 import javax.validation.Valid
 import java.util.*
 import java.util.stream.Collectors
 
-import org.springframework.security.core.Authentication
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -22,12 +19,14 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-import models.LoginUser
-import models.CreateUser
-import response.ResponseMessage
-import jpa.User
-import repositories.UserRepository
-import repositories.RoleRepository
+import com.myproject.backend.models.LoginUser
+import com.myproject.backend.models.CreateUser
+import com.myproject.backend.response.JwtResponse
+import com.myproject.backend.response.ResponseMessage
+import com.myproject.backend.jpa.Employee
+import com.myproject.backend.repositories.EmployeeRepository
+import com.myproject.backend.repositories.RoleRepository
+import com.myproject.backend.jwt.JwtProvider
 
 
 @CrossOrigin(origins = ["*"], maxAge = 3600)
@@ -39,7 +38,7 @@ class AuthController() {
     lateinit var authenticationManager: AuthenticationManager
 
     @Autowired
-    lateinit var userRepository: UserRepository
+    lateinit var employeeRepository: EmployeeRepository
 
     @Autowired
     lateinit var roleRepository: RoleRepository
@@ -47,46 +46,52 @@ class AuthController() {
     @Autowired
     lateinit var encoder: PasswordEncoder
 
+    @Autowired
+    lateinit var jwtProvider: JwtProvider
+
     @PostMapping("/signin")
     fun authenticateUser(@Valid @RequestBody loginRequest: LoginUser): ResponseEntity<*> {
 
-        val userCandidate: Optional <User> = userRepository.findByUsername(loginRequest.username!!)
+        val userCandidate: Optional <Employee> = employeeRepository.findByUsername(loginRequest.username!!)
 
         if (userCandidate.isPresent) {
-            val user: User = userCandidate.get()
+            val user: Employee = userCandidate.get()
             val authentication = authenticationManager.authenticate(
                 UsernamePasswordAuthenticationToken(loginRequest.username, loginRequest.password))
             SecurityContextHolder.getContext().setAuthentication(authentication)
+            val jwt: String = jwtProvider.generateJwtToken(user.username!!)
             val authorities: List<GrantedAuthority> = user.roles!!.stream().map({ role -> SimpleGrantedAuthority(role.name)}).collect(Collectors.toList<GrantedAuthority>())
-            return ResponseEntity.ok("ok")
+            return ResponseEntity.ok(JwtResponse(jwt, user.username, authorities))
         } else {
-            return ResponseEntity("User not found!", HttpStatus.BAD_REQUEST)
+            return ResponseEntity(ResponseMessage("User not found!"),
+                HttpStatus.BAD_REQUEST)
         }
     }
 
     @PostMapping("/signup")
-    fun registerUser(@Valid @RequestBody createUser: CreateUser): ResponseEntity<*> {
+    fun registerUser(@Valid @RequestBody newUser: CreateUser): ResponseEntity<*> {
 
-        val userCandidate: Optional <User> = userRepository.findByUsername(createUser.username!!)
+        val userCandidate: Optional <Employee> = employeeRepository.findByUsername(newUser.username!!)
 
         if (!userCandidate.isPresent) {
-            if (usernameExists(createUser.username!!)) {
+            if (usernameExists(newUser.username!!)) {
                 return ResponseEntity(ResponseMessage("Username is already taken!"),
                     HttpStatus.BAD_REQUEST)
             }
 
             // Creating user's account
-            val user = User(
+            val user = Employee(
                 0,
-                createUser.username!!,
-                createUser.firstName!!,
-                createUser.lastName!!,
-                encoder.encode(createUser.password),
-                true
+                newUser.username!!,
+                newUser.firstName!!,
+                newUser.lastName!!,
+                encoder.encode(newUser.password),
+                0,
+
             )
             user!!.roles = Arrays.asList(roleRepository.findByName("ROLE_USER"))
 
-            userRepository.save(user)
+            employeeRepository.save(user)
 
             return ResponseEntity(ResponseMessage("User registered successfully!"), HttpStatus.OK)
         } else {
@@ -96,7 +101,7 @@ class AuthController() {
     }
 
     private fun usernameExists(username: String): Boolean {
-        return userRepository.findByUsername(username).isPresent
+        return employeeRepository.findByUsername(username).isPresent
     }
 
 }
