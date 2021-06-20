@@ -20,24 +20,27 @@ import MenuItem from "@material-ui/core/MenuItem";
 class Account extends Component {
   state = {
     initialData: null,
-    accountNumber: null,
-    allocationType: null,
-    amount: null,
+    accountNumber: "",
+    allocationType: "",
+    amount: "",
     employeeId: null,
     id: null,
-    nickname: null,
-    priority: null,
+    nickname: "",
+    priority: "",
     remainder: false,
-    routingNumber: null,
+    routingNumber: "",
     editing: false,
     creating: false,
     errorText: "",
   };
 
   componentDidMount() {
-    const { data } = this.props;
+    const { data, creating } = this.props;
     if (data) {
-      this.setState({ ...data, initialData: data });
+      this.setState({ ...data, initialData: data});
+    }
+    if (creating) {
+      this.setState({creating: creating})
     }
   }
 
@@ -58,8 +61,8 @@ class Account extends Component {
   };
 
   onDeleteButtonClick = () => {
-      const { onDelete } = this.props;
-    onDelete(this.state.id)
+    const { onDelete } = this.props;
+    onDelete(this.state.id);
   };
 
   onUpdateAccount = async () => {
@@ -67,15 +70,10 @@ class Account extends Component {
       const {
         accountNumber,
         allocationType,
-        amount,
         id,
         nickname,
         priority,
-        remainder,
         routingNumber,
-        editing,
-        creating,
-        errorText,
       } = this.state;
       const data = {
         accountNumber,
@@ -100,6 +98,25 @@ class Account extends Component {
     this.setState({ [field]: e.target.value });
   };
 
+  onCreateButtonClick = () => {
+    const {
+      accountNumber,
+      allocationType,
+      nickname,
+      priority,
+      routingNumber,
+    } = this.state;
+    const {createAccount} = this.props;
+    const data = {
+      accountNumber,
+        allocationType,
+        nickname,
+        priority,
+        routingNumber,
+    }
+    createAccount(data)
+  }
+
   render() {
     const {
       accountNumber,
@@ -114,7 +131,7 @@ class Account extends Component {
       creating,
       errorText,
     } = this.state;
-    console.log(this.state);
+    console.log(creating);
     return (
       <div>
         <div
@@ -138,8 +155,7 @@ class Account extends Component {
                 variant="outlined"
                 onChange={(e) => this.handleChange(e, "nickname")}
                 InputProps={{
-                  readOnly: true,
-                  readOnly: !editing,
+                  readOnly: !(editing || creating),
                 }}
               />
               <TextField
@@ -149,8 +165,7 @@ class Account extends Component {
                 variant="outlined"
                 onChange={(e) => this.handleChange(e, "routingNumber")}
                 InputProps={{
-                  readOnly: true,
-                  readOnly: !editing,
+                  readOnly: !(editing || creating),
                 }}
               />
               <TextField
@@ -160,7 +175,7 @@ class Account extends Component {
                 variant="outlined"
                 onChange={(e) => this.handleChange(e, "accountNumber")}
                 InputProps={{
-                  readOnly: !editing,
+                  readOnly: !(editing || creating),
                 }}
               />
               <FormControl className="default-input">
@@ -170,7 +185,7 @@ class Account extends Component {
                   onChange={(e) => this.handleChange(e, "allocationType")}
                   value={allocationType}
                   inputProps={{
-                    readOnly: !editing,
+                    readOnly: !(editing || creating),
                     "aria-label": "Allocation Type",
                   }}
                 >
@@ -198,38 +213,50 @@ class Account extends Component {
               </FormControl>
 
               <br />
-              {
-                <>
+
+              <>
+                {creating ? (
                   <Button
                     style={{ minWidth: "151px" }}
                     color={editing ? "primary" : "default"}
                     variant="contained"
-                    onClick={this.onEditButtonClick}
+                    onClick={this.onCreateButtonClick}
                   >
-                    {editing ? "Save" : "Edit"}
+                    Create
                   </Button>
-                  {!editing && (
+                ) : (
+                  <>
                     <Button
                       style={{ minWidth: "151px" }}
                       color={editing ? "primary" : "default"}
                       variant="contained"
-                      onClick={this.onDeleteButtonClick}
+                      onClick={this.onEditButtonClick}
                     >
-                      Delete
+                      {editing ? "Save" : "Edit"}
                     </Button>
-                  )}
-                  {editing && (
-                    <Button
-                      style={{ minWidth: "151px" }}
-                      color={editing ? "primary" : "default"}
-                      variant="contained"
-                      onClick={this.onCancelButtonClick}
-                    >
-                      Cancel
-                    </Button>
-                  )}
-                </>
-              }
+                    {!editing && (
+                      <Button
+                        style={{ minWidth: "151px" }}
+                        color={editing ? "primary" : "default"}
+                        variant="contained"
+                        onClick={this.onDeleteButtonClick}
+                      >
+                        Delete
+                      </Button>
+                    )}
+                    {editing && (
+                      <Button
+                        style={{ minWidth: "151px" }}
+                        color={editing ? "primary" : "default"}
+                        variant="contained"
+                        onClick={this.onCancelButtonClick}
+                      >
+                        Cancel
+                      </Button>
+                    )}
+                  </>
+                )}
+              </>
             </CardContent>
           </Card>
         </div>
