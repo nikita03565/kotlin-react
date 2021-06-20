@@ -11,25 +11,25 @@ data class Account (
     val id: Long,
 
     @Column(name = "nickname")
-    val nickname: String,
+    var nickname: String,
 
     @Column(name = "routing_number")
-    val routingNumber: String,
+    var routingNumber: String,
 
     @Column(name = "account_number")
-    val accountNumber: String,
+    var accountNumber: String,
 
     @Column(name = "amount")
-    val amount: Float,
+    var amount: Float,
 
     @Column(name = "allocation_type")
-    val allocationType: String,
+    var allocationType: String,
 
     @Column(name = "is_remainder")
-    val isRemainder: Boolean,
+    var isRemainder: Boolean,
 
     @Column(name = "priority")
-    val priority: Int,
+    var priority: Int,
 
     @Column(name = "employee_id")
     val employeeId: Long,
