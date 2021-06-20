@@ -4,9 +4,11 @@ package com.myproject.backend.controllers
 import com.myproject.backend.jpa.Account
 import com.myproject.backend.jpa.Company
 import com.myproject.backend.jpa.Employee
+import com.myproject.backend.jpa.Role
 import com.myproject.backend.models.UpdateAccount
 import com.myproject.backend.repositories.AccountRepository
 import com.myproject.backend.repositories.EmployeeRepository
+import com.myproject.backend.repositories.RoleRepository
 import com.myproject.backend.service.AccountService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
@@ -26,6 +28,9 @@ class BackendController() {
 
     @Autowired
     lateinit var accountRepository: AccountRepository
+
+    @Autowired
+    lateinit var roleRepository: RoleRepository
 
     @Autowired
     lateinit var accountService: AccountService
@@ -88,6 +93,18 @@ class BackendController() {
         // TODO validate
         val user: Employee = employeeRepository.findByUsername(authentication.name).get()
         accountService.deleteAccount(id.toLong())
+    }
+
+    @PostMapping("/users/{id}/make_admin")
+    @PreAuthorize("hasRole('SUPER')")
+    @ResponseBody
+    fun makeAdmin(authentication: Authentication, @PathVariable id: String): Any {
+        // TODO validate permissions!
+        val employee: Employee = employeeRepository.findById(id.toLong()).get()
+        val role: Role = roleRepository.findByName("ROLE_ADMIN")
+        println(role)
+        println(employee)
+        return role
     }
 
     @GetMapping("/admincontent")

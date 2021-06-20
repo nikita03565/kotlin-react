@@ -5,6 +5,7 @@ import Account from "./Account";
 import Navbar from "../Navbar";
 import { Button, Modal } from "@material-ui/core";
 import { sortBy} from "lodash"
+
 class Users extends Component {
   state = {
     accounts: [],

@@ -9,7 +9,8 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-
+import { Button } from "@material-ui/core";
+import { withAuthHeader } from "../Auth";
 class Users extends Component {
   state = {
     users: [],
@@ -44,7 +45,7 @@ class Users extends Component {
     const { users } = this.state;
     if (users.length > 0) {
       const keys = Object.keys(users[0]);
-      keys.push("Actions")
+      keys.push("Actions");
       return keys
         .filter((k) => !this.ignoredKeys.includes(k))
         .map((k) => <TableCell key={k}> {this.getReadableName(k)} </TableCell>);
@@ -52,23 +53,117 @@ class Users extends Component {
     return null;
   };
 
+  makeAdmin = async (id) => {
+    try {
+      const res = await axios({method: "post", url: `api/users/${id}/make_admin`, 
+        headers: withAuthHeader(),
+      });
+    } catch (err) {
+      console.log(err);
+      console.log(err.response);
+      if (axios.isCancel(err)) {
+        return;
+      }
+    }
+  };
+
+  makeAdmin = async (id) => {
+    try {
+      const res = await axios({method: "post", url: `api/users/${id}/make_admin`, 
+        headers: withAuthHeader(),
+      });
+    } catch (err) {
+      console.log(err);
+      console.log(err.response);
+      if (axios.isCancel(err)) {
+        return;
+      }
+    }
+  };
+
+  makeSuper = async (id) => {
+    try {
+      const res = await axios({method: "post", url: `api/users/${id}/make_super`, 
+        headers: withAuthHeader(),
+      });
+    } catch (err) {
+      console.log(err);
+      console.log(err.response);
+      if (axios.isCancel(err)) {
+        return;
+      }
+    }
+  };
+
+  removeAdmin = async (id) => {
+    try {
+      const res = await axios({method: "post", url: `api/users/${id}/remove_admin`, 
+        headers: withAuthHeader(),
+      });
+    } catch (err) {
+      console.log(err);
+      console.log(err.response);
+      if (axios.isCancel(err)) {
+        return;
+      }
+    }
+  };
+
+  removeSuper = async (id) => {
+    try {
+      const res = await axios({method: "post", url: `api/users/${id}/remove_super`, 
+        headers: withAuthHeader(),
+      });
+    } catch (err) {
+      console.log(err);
+      console.log(err.response);
+      if (axios.isCancel(err)) {
+        return;
+      }
+    }
+  };
+
+  removeUser = async (id) => {
+    try {
+      const res = await axios({method: "delete", url: `api/users/${id}`, 
+        headers: withAuthHeader(),
+      });
+    } catch (err) {
+      console.log(err);
+      console.log(err.response);
+      if (axios.isCancel(err)) {
+        return;
+      }
+    }
+  };
+
   getTableRow = (row) => {
     const roles = row.roles.map((r) => r.name.replace("ROLE_", "")).join(", ");
-    const actions = []
+    const actions = [];
     if (roles.includes("USER") && !roles.includes("ADMIN")) {
-      actions.push("Make admin")
+      actions.push(
+        <Button onClick={() => this.makeAdmin(row.id)}>Make admin</Button>
+      );
     }
     if (roles.includes("USER") && !roles.includes("SUPER")) {
-      actions.push("Make super")
+      actions.push(
+        <Button onClick={() => this.makeSuper(row.id)}>Make super</Button>
+      );
     }
     if (roles.includes("SUPER")) {
-      actions.push("Remove super")
+      actions.push(
+        <Button onClick={() => this.removeSuper(row.id)}>Remove super</Button>
+      );
     }
     if (roles.includes("ADMIN")) {
-      actions.push("Remove admin")
+      actions.push(
+        <Button onClick={() => this.removeAdmin(row.id)}>Remove admin</Button>
+      );
     }
     if (roles.includes("USER")) {
-      actions.push("Remove")
+      actions.push(
+        <Button onClick={() => this.removeUser(row.id)}>Remove</Button>
+      );
     }
     return (
       <TableRow key={row.id}>
@@ -79,7 +174,7 @@ class Users extends Component {
         <TableCell>{row.title}</TableCell>
         <TableCell>{roles}</TableCell>
         <TableCell>{row.company.name}</TableCell>
-        <TableCell>{actions.join("|")}</TableCell>
+        <TableCell>{actions}</TableCell>
       </TableRow>
     );
   };
