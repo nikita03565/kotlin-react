@@ -8,9 +8,18 @@ import Home from "./Home";
 import Users from "./Users";
 import Accounts from "./Accounts";
 import UserDetail from "./Users/UserDetail";
+import { tryParseJSONroles } from "./utils";
 import history from "./history";
 
 function Router() {
+  
+  const showFor = (roles) => {
+    const userRoles = tryParseJSONroles(localStorage.getItem("roles"));
+    return (
+      userRoles && userRoles.some((userRole) => roles.includes(userRole))
+    );
+  };
+
   return (
     <BrowserRouter history={history}>
       <div style={{ margin: 20 }}>
@@ -21,6 +30,9 @@ function Router() {
           <Route exact path="/users" component={Users} />
           <Route exact path="/users/:id" component={UserDetail} />
           <Route exact path="/accounts" component={Accounts} />
+          {showFor(["ROLE_ADMIN"]) && (
+            <Route exact path="/directory" component={Users} />
+          )}
           <Route path="*" component={NotFound} />
         </Switch>
       </div>

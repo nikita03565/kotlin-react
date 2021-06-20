@@ -9,32 +9,33 @@ class Users extends Component {
     users: [],
   };
 
-  componentDidMount() {
-    this.onLoadAllUsers();
-  }
+  // componentDidMount() {
+  //   this.onLoadAllUsers();
+  // }
 
-  async onLoadAllUsers() {
-    try {
-      const res = await loadData("users");
-      this.setState({
-        users: res.data,
-      });
-    } catch (err) {
-      console.log(err);
-      console.log(err.response);
-      if (axios.isCancel(err)) {
-        return;
-      }
-    }
-  }
+  // async onLoadAllUsers() {
+  //   try {
+  //     const res = await loadData("users");
+  //     this.setState({
+  //       users: res.data,
+  //     });
+  //   } catch (err) {
+  //     console.log(err);
+  //     console.log(err.response);
+  //     if (axios.isCancel(err)) {
+  //       return;
+  //     }
+  //   }
+  // }
   render() {
     const { users } = this.state;
     return (
       <div>
         <Navbar />
-        {users.map((user) => (
+        {/* {users.map((user) => (
           <UserDetail data={user} key={user.id} />
-        ))}
+        ))} */}
+        USERS VIEW!
       </div>
     );
   }
