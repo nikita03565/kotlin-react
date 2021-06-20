@@ -45,6 +45,16 @@ class BackendController() {
         return accounts
     }
 
+    @PostMapping("/accounts")
+    @PreAuthorize("hasRole('USER')")
+    @ResponseBody
+    fun createAccount(authentication: Authentication, @Valid @RequestBody body: UpdateAccount): Account? {
+        // TODO validate
+        val employeeId: Long? = employeeRepository.findByUsername(authentication.name).get().id
+        val account = accountService.createAccount(body, employeeId)
+        return account
+    }
+
     @PatchMapping("/accounts/{id}")
     @PreAuthorize("hasRole('USER')")
     @ResponseBody

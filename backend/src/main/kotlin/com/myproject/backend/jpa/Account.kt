@@ -8,7 +8,7 @@ import javax.persistence.*
 data class Account (
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    val id: Long,
+    val id: Long? = null,
 
     @Column(name = "nickname")
     var nickname: String,
@@ -20,13 +20,13 @@ data class Account (
     var accountNumber: String,
 
     @Column(name = "amount")
-    var amount: Float,
+    var amount: Float? = null,
 
     @Column(name = "allocation_type")
     var allocationType: String,
 
     @Column(name = "is_remainder")
-    var isRemainder: Boolean,
+    var isRemainder: Boolean? = null,
 
     @Column(name = "priority")
     var priority: Int,
