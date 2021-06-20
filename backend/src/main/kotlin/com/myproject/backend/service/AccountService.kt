@@ -27,6 +27,10 @@ class AccountService {
         val accountToUpdate = accountRepository.findByIdOrNull(id)
         if (accountToUpdate != null) {
             accountToUpdate.routingNumber = account.routingNumber!!
+            accountToUpdate.accountNumber = account.accountNumber!!
+            accountToUpdate.nickname = account.nickname!!
+            accountToUpdate.priority = account.priority!!
+            accountToUpdate.allocationType = account.allocationType!!
         }
         return accountToUpdate;
     }
