@@ -58,7 +58,7 @@ class Navbar extends Component {
                                 <NavLink className="nav-link" to="/">Home</NavLink>
                             </li>
                             <li className="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
-                                <NavLink className="nav-link" to='/users'>Пользователи</NavLink>
+                                <NavLink className="nav-link" to='/accounts'>My Accounts</NavLink>
                             </li>
                         </ul>
                         {
@@ -87,7 +87,7 @@ class Navbar extends Component {
                                         to="/"
                                         onClick={this.handleLogout}
                                     >
-                                        Выйти
+                                        Log Out
                                     </Button>
                                 </div>
                                 :
@@ -96,10 +96,10 @@ class Navbar extends Component {
                                     className="navbar-nav"
                                 >
                                     <li className="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
-                                        <NavLink className="nav-link" to="/signup">Зарегистрироваться</NavLink>
+                                        <NavLink className="nav-link" to="/signup">Sign Up</NavLink>
                                     </li>
                                     <li className="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
-                                        <NavLink className="nav-link" to="/signin">Войти</NavLink>
+                                        <NavLink className="nav-link" to="/signin">Sign In</NavLink>
                                     </li>
                                 </div>
                         }

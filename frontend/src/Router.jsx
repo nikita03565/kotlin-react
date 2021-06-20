@@ -8,6 +8,7 @@ import SignUp from './AuthManagement/SignUp';
 import NotFound from './NotFound';
 import Home from './Home'
 import Users from './Users'
+import Accounts from './Accounts'
 import UserDetail from './Users/UserDetail'
 import history from './history';
 
@@ -21,6 +22,7 @@ function Router() {
                     <Route exact path='/signup' component={SignUp} />
                     <Route exact path='/users' component={Users} />
                     <Route exact path='/users/:id' component={UserDetail} />
+                    <Route exact path='/accounts' component={Accounts} />
                     <Route path='*' component={NotFound} />
                 </Switch>
             </div>

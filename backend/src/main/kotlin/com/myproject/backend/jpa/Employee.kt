@@ -43,6 +43,6 @@ data class Employee(
     @JoinColumn(name="company_id")
     var company: Company? = null,
 
-    @OneToMany(mappedBy = "employee")
-    var accounts: Collection<Account>? = null
+//    @OneToMany(mappedBy = "employee") Moved to separate endpoint
+//    var accounts: Collection<Account>? = null
 )

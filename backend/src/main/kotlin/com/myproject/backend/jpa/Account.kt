@@ -32,10 +32,10 @@ data class Account (
     val priority: Int,
 
     @Column(name = "employee_id")
-    val employeeId: Int,
+    val employeeId: Long,
 
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name="employee_id", nullable=false, insertable = false, updatable = false)
-    val employee: Employee
+//    @JsonIgnore  Moved to separate endpoint
+//    @ManyToOne
+//    @JoinColumn(name="employee_id", nullable=false, insertable = false, updatable = false)
+//    val employee: Employee
 )

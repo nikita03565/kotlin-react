@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 import java.util.*
 
 interface AccountRepository : JpaRepository<Account, Long> {
-
+    fun findAccountByEmployeeId(@Param("employee_id") employeeId: Long?): Collection<Account>
 }
