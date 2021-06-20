@@ -1,5 +1,6 @@
 package com.myproject.backend.repositories
 
+import com.myproject.backend.jpa.Company
 import com.myproject.backend.jpa.Employee
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.query.Param
@@ -14,5 +15,7 @@ interface EmployeeRepository: JpaRepository<Employee, Long> {
 
     @Transactional
     fun deleteByUsername(@Param("username") username: String)
+
+    fun findAllByCompany(@Param("company") company: Company): Collection<Employee>
 
 }

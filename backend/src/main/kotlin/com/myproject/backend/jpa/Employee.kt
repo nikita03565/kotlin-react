@@ -1,5 +1,6 @@
 package com.myproject.backend.jpa
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
 
 @Entity
@@ -19,6 +20,7 @@ data class Employee(
     @Column(name = "last_name")
     var lastName: String? = null,
 
+    @JsonIgnore
     @Column(name = "password")
     var password: String? = null,
 
@@ -28,6 +30,7 @@ data class Employee(
     @Column(name = "title")
     var title: String? = null,
 
+    @JsonIgnore
     @Column(name = "enabled")
     var enabled: Boolean = false,
 
