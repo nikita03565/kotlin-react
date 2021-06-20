@@ -55,6 +55,15 @@ class BackendController() {
         return account
     }
 
+    @DeleteMapping("/accounts/{id}")
+    @PreAuthorize("hasRole('USER')")
+    @ResponseBody
+    fun deleteAccount(@PathVariable id: String, authentication: Authentication) {
+        // TODO validate
+        val user: Employee = employeeRepository.findByUsername(authentication.name).get()
+        accountService.deleteAccount(id.toLong())
+    }
+
     @GetMapping("/admincontent")
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseBody

@@ -34,4 +34,9 @@ class AccountService {
         }
         return accountToUpdate;
     }
+
+    @Transactional
+    fun deleteAccount(id: Long) {
+        accountRepository.deleteById(id)
+    }
 }
