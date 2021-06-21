@@ -40,7 +40,7 @@ data class Employee(
         joinColumns = [JoinColumn(name = "employee_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "id")]
     )
-    var roles: Collection<Role>? = null,
+    var roles: MutableCollection<Role>? = null,
 
     @ManyToOne
     @JoinColumn(name="company_id")

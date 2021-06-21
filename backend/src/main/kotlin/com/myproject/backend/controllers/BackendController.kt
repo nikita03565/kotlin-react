@@ -1,6 +1,5 @@
 package com.myproject.backend.controllers
 
-//import com.myproject.backend.repository.PersonRepository
 import com.myproject.backend.jpa.Account
 import com.myproject.backend.jpa.Company
 import com.myproject.backend.jpa.Employee
@@ -10,6 +9,7 @@ import com.myproject.backend.repositories.AccountRepository
 import com.myproject.backend.repositories.EmployeeRepository
 import com.myproject.backend.repositories.RoleRepository
 import com.myproject.backend.service.AccountService
+import com.myproject.backend.service.EmployeeService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
@@ -34,6 +34,9 @@ class BackendController() {
 
     @Autowired
     lateinit var accountService: AccountService
+
+    @Autowired
+    lateinit var employeeService: EmployeeService
 
     @GetMapping("/users/me")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
@@ -102,8 +105,51 @@ class BackendController() {
         // TODO validate permissions!
         val employee: Employee = employeeRepository.findById(id.toLong()).get()
         val role: Role = roleRepository.findByName("ROLE_ADMIN")
-        println(role)
-        println(employee)
+        employeeService.addRole(employee, role)
+        return role
+    }
+
+    @PostMapping("/users/{id}/make_super")
+    @PreAuthorize("hasRole('SUPER')")
+    @ResponseBody
+    fun makeSuper(authentication: Authentication, @PathVariable id: String): Any {
+        // TODO validate permissions!
+        val employee: Employee = employeeRepository.findById(id.toLong()).get()
+        val role: Role = roleRepository.findByName("ROLE_SUPER")
+        employeeService.addRole(employee, role)
+        return role
+    }
+
+    @PostMapping("/users/{id}/remove_super")
+    @PreAuthorize("hasRole('SUPER')")
+    @ResponseBody
+    fun removeSuper(authentication: Authentication, @PathVariable id: String): Any {
+        // TODO validate permissions!
+        val employee: Employee = employeeRepository.findById(id.toLong()).get()
+        val role: Role = roleRepository.findByName("ROLE_SUPER")
+        employeeService.removeRole(employee, role)
+        return role
+    }
+
+    @PostMapping("/users/{id}/remove_admin")
+    @PreAuthorize("hasRole('SUPER')")
+    @ResponseBody
+    fun removeAdmin(authentication: Authentication, @PathVariable id: String): Any {
+        // TODO validate permissions!
+        val employee: Employee = employeeRepository.findById(id.toLong()).get()
+        val role: Role = roleRepository.findByName("ROLE_ADMIN")
+        employeeService.removeRole(employee, role)
+        return role
+    }
+
+    @DeleteMapping("/users/{id}")
+    @PreAuthorize("hasRole('SUPER')")
+    @ResponseBody
+    fun removeUser(authentication: Authentication, @PathVariable id: String): Any {
+        // TODO validate permissions!
+        val employee: Employee = employeeRepository.findById(id.toLong()).get()
+        val role: Role = roleRepository.findByName("ROLE_USER")
+        employeeService.removeRole(employee, role)
         return role
     }
 
