@@ -4,11 +4,14 @@ import com.myproject.backend.jpa.Account
 import com.myproject.backend.jpa.Company
 import com.myproject.backend.jpa.Employee
 import com.myproject.backend.jpa.Role
+import com.myproject.backend.models.CreateCompany
 import com.myproject.backend.models.UpdateAccount
 import com.myproject.backend.repositories.AccountRepository
 import com.myproject.backend.repositories.EmployeeRepository
 import com.myproject.backend.repositories.RoleRepository
+import com.myproject.backend.repositories.CompanyRepository
 import com.myproject.backend.service.AccountService
+import com.myproject.backend.service.CompanyService
 import com.myproject.backend.service.EmployeeService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
@@ -30,6 +33,9 @@ class BackendController() {
     lateinit var accountRepository: AccountRepository
 
     @Autowired
+    lateinit var companyRepository: CompanyRepository
+
+    @Autowired
     lateinit var roleRepository: RoleRepository
 
     @Autowired
@@ -37,6 +43,9 @@ class BackendController() {
 
     @Autowired
     lateinit var employeeService: EmployeeService
+
+    @Autowired
+    lateinit var companyService: CompanyService
 
     @GetMapping("/users/me")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
@@ -151,6 +160,24 @@ class BackendController() {
         val role: Role = roleRepository.findByName("ROLE_USER")
         employeeService.removeRole(employee, role)
         return role
+    }
+
+    @GetMapping("/companies")
+    @PreAuthorize("hasRole('SUPER')")
+    @ResponseBody
+    fun getCompanies(authentication: Authentication):  Collection<Company> {
+        // TODO validate
+        val companies: Collection<Company> = companyRepository.findAll()
+        return companies
+    }
+
+    @PostMapping("/companies")
+    @PreAuthorize("hasRole('SUPER')")
+    @ResponseBody
+    fun createCompany(authentication: Authentication, @Valid @RequestBody body: CreateCompany): Company {
+        // TODO validate
+        val company = companyService.createCompany(body)
+        return company
     }
 
     @GetMapping("/admincontent")

@@ -8,7 +8,7 @@ data class Company(
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    val id: Long,
+    val id: Long? = null,
 
     @Column(name = "name")
     val name: String
