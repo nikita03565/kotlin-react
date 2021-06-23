@@ -4,7 +4,6 @@ CREATE TABLE employee
     username   character varying,
     first_name character varying,
     last_name  character varying,
-    email      character varying,
     password   character varying,
     salary     integer,
     enabled    boolean,

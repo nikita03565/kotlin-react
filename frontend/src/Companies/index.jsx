@@ -11,7 +11,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { Button, Card, CardContent, Modal } from "@material-ui/core";
 import { withAuthHeader } from "../Auth";
-import Company from "./Company"
+import Company from "./Company";
 class Users extends Component {
   state = {
     companies: [],
@@ -42,7 +42,8 @@ class Users extends Component {
     try {
       const res = await addEl("companies", data);
       this.setState({
-        companys: [res.data, ...companies], creating: false
+        companys: [res.data, ...companies],
+        creating: false,
       });
     } catch (err) {
       console.log(err);
@@ -61,16 +62,13 @@ class Users extends Component {
     this.setState({ creating: false });
   };
 
-
   getCompanyCard = (company) => {
     return (
       <Card>
-        <CardContent>
-          {company.name}
-        </CardContent>
+        <CardContent>{company.name}</CardContent>
       </Card>
-    )
-  }
+    );
+  };
 
   render() {
     const { companies, creating } = this.state;
@@ -88,14 +86,14 @@ class Users extends Component {
             Create new company
           </Button>
         )}
-        {companies.map(c => this.getCompanyCard(c))}
+        {companies.map((c) => this.getCompanyCard(c))}
         <Modal
           open={creating}
           onClose={this.handleClose}
           aria-labelledby="simple-modal-title"
           aria-describedby="simple-modal-description"
         >
-          <Company creating={true} createCompany={this.onCreateCompany}/>
+          <Company creating={true} createCompany={this.onCreateCompany} />
         </Modal>
       </div>
     );

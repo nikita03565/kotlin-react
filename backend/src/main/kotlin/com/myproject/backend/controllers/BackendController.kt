@@ -6,6 +6,7 @@ import com.myproject.backend.jpa.Employee
 import com.myproject.backend.jpa.Role
 import com.myproject.backend.models.CreateCompany
 import com.myproject.backend.models.UpdateAccount
+import com.myproject.backend.models.UpdateUser
 import com.myproject.backend.repositories.AccountRepository
 import com.myproject.backend.repositories.EmployeeRepository
 import com.myproject.backend.repositories.RoleRepository
@@ -97,6 +98,16 @@ class BackendController() {
         val user: Employee = employeeRepository.findByUsername(authentication.name).get()
         val account = accountService.updateAccount(body, id.toLong())
         return account
+    }
+
+    @PatchMapping("/users/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER')")
+    @ResponseBody
+    fun updateAccount(@PathVariable id: String, authentication: Authentication, @Valid @RequestBody body: UpdateUser): Employee? {
+        // TODO validate
+        val user: Employee = employeeRepository.findByUsername(authentication.name).get()
+        val employee = employeeService.updateEmployee(body, id.toLong())
+        return employee
     }
 
     @DeleteMapping("/accounts/{id}")
