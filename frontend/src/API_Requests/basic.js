@@ -3,7 +3,7 @@ import { withAuthHeader } from "../Auth";
 
 export const loadData = async (baseUrl) => {
   const res = await axios({
-    url: `/api/${baseUrl}/`,
+    url: `/api/${baseUrl}`,
     headers: withAuthHeader(),
   });
   return res;

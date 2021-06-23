@@ -14,16 +14,20 @@ class CreateUser : Serializable {
     @JsonProperty("lastName")
     var lastName: String? = null
 
+    @JsonProperty("companyId")
+    var companyId: Long? = null
+
     @JsonProperty("password")
     var password: String? = null
 
     constructor() {}
 
-    constructor(username: String, firstName: String, lastName: String, password: String) {
+    constructor(username: String, firstName: String, lastName: String, password: String, companyId: Long?) {
         this.username = username
         this.firstName = firstName
         this.lastName = lastName
         this.password = password
+        this.companyId = companyId
     }
 
     companion object {

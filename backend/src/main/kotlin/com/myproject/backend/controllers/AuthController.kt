@@ -87,7 +87,7 @@ class AuthController() {
                 newUser.lastName!!,
                 encoder.encode(newUser.password),
                 0,
-
+                companyId=newUser.companyId,
             )
             user!!.roles = Arrays.asList(roleRepository.findByName("ROLE_USER"))
 

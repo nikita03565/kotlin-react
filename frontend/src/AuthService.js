@@ -26,12 +26,13 @@ export default class AuthService {
     return Promise.resolve(res);
   }
 
-  async signup(username, password, first_name, last_name) {
+  async signup(username, password, first_name, last_name, company_id) {
     const data = {
       username,
       password,
-      first_name,
-      last_name,
+      firstName: first_name,
+      lastName: last_name,
+      companyId: company_id,
     };
     const res = await axios({
       method: "post",

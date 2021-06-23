@@ -5,6 +5,7 @@ import AuthService from "../AuthService";
 import history from "../history";
 import Navbar from "../Navbar";
 import parseErrors from "../parseErrors";
+import { loadData } from "../API_Requests/basic";
 
 class SignUp extends Component {
   constructor() {
@@ -19,6 +20,9 @@ class SignUp extends Component {
       password2: "",
       first_name: "",
       last_name: "",
+      company: "",
+      company_id: null,
+      companyErrorText: "",
     };
   }
 
@@ -29,10 +33,10 @@ class SignUp extends Component {
   }
 
   async handleFormSubmit(e) {
-    const { username, password, first_name, last_name } = this.state;
+    const { username, password, first_name, last_name, company_id } = this.state;
     e.preventDefault();
     try {
-      await this.Auth.signup(username, password, first_name, last_name);
+      await this.Auth.signup(username, password, first_name, last_name, company_id);
       history.push("/");
     } catch (err) {
       const errorText = parseErrors(err);
@@ -46,9 +50,41 @@ class SignUp extends Component {
     });
   }
 
+  selectCompany = async () => {
+    const { company } = this.state;
+    try {
+      const res = await loadData(`companies?name=${company}`);
+      console.log(res, res.data);
+      if (res.data == null) {
+        this.setState({
+          company_id: null,
+          companyErrorText:
+            "Company was not found. Don't worry, you can still sign up",
+        });
+      } else {
+        this.setState({
+          company_id: res.data.id,
+          companyErrorText: "",
+        });
+      }
+    } catch (err) {
+      const errorText = parseErrors(err);
+      this.setState({ errorText });
+    }
+  };
+
   render() {
-    const { errorText, username, password, first_name, last_name, password2 } =
-      this.state;
+    const {
+      errorText,
+      username,
+      password,
+      first_name,
+      last_name,
+      password2,
+      company,
+      companyErrorText,
+    } = this.state;
+    console.log(this.state)
     return (
       <div>
         <Navbar />
@@ -66,13 +102,42 @@ class SignUp extends Component {
         >
           <Card style={{ width: 250, paddingLeft: 10 }}>
             <CardContent>
+              <TextField
+                name="company"
+                type="text"
+                value={company}
+                onChange={this.handleChange}
+                placeholder="Company Name"
+                required
+              />
+            </CardContent>
+            <Button
+              style={{ marginTop: 20 }}
+              variant="contained"
+              color="primary"
+              type="submit"
+              onClick={this.selectCompany}
+            >
+              Select Company
+            </Button>
+            {companyErrorText !== "" ? (
+              <p style={{ color: "red", margin: 0, marginTop: 10 }}>
+                {companyErrorText}
+              </p>
+            ) : (
+              ""
+            )}
+          </Card>
+
+          <Card style={{ width: 250, paddingLeft: 10 }}>
+            <CardContent>
               <form onSubmit={this.handleFormSubmit}>
                 <TextField
                   name="username"
                   type="text"
                   value={username}
                   onChange={this.handleChange}
-                  placeholder="Введите юзернейм"
+                  placeholder="Enter username"
                   required
                 />
                 <TextField
@@ -80,7 +145,7 @@ class SignUp extends Component {
                   type="text"
                   value={first_name}
                   onChange={this.handleChange}
-                  placeholder="Введите имя"
+                  placeholder="Enter first name"
                   required
                 />
                 <TextField
@@ -88,7 +153,7 @@ class SignUp extends Component {
                   type="text"
                   value={last_name}
                   onChange={this.handleChange}
-                  placeholder="Введите фамилию"
+                  placeholder="Enter last name"
                   required
                 />
                 <TextField
@@ -96,7 +161,7 @@ class SignUp extends Component {
                   value={password}
                   type="password"
                   onChange={this.handleChange}
-                  placeholder="Введите пароль"
+                  placeholder="Enter password"
                   required
                 />
                 <TextField
@@ -104,7 +169,7 @@ class SignUp extends Component {
                   value={password2}
                   type="password"
                   onChange={this.handleChange}
-                  placeholder="Повторите пароль"
+                  placeholder="Confirm password"
                   required
                 />
                 <Button
@@ -114,7 +179,7 @@ class SignUp extends Component {
                   type="submit"
                   disabled={password !== password2}
                 >
-                  Зарегистрироваться
+                  Sign up
                 </Button>
               </form>
               {errorText !== "" ? (

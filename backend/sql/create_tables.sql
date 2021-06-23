@@ -67,8 +67,8 @@ CREATE TABLE account
     account_number  character varying,
     allocation_type character varying,
     amount          float,
+    received_amount float,
     balance         float,
-    is_remainder    boolean,
     priority        integer,
     employee_id     integer,
     PRIMARY KEY (id)
@@ -76,6 +76,30 @@ CREATE TABLE account
 
 ALTER TABLE account
     ADD CONSTRAINT account_employee_fk FOREIGN KEY (employee_id)
+        REFERENCES employee (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE;
+
+
+CREATE TABLE payment
+(
+    id          serial NOT NULL,
+    amount      float,
+    employee_id integer NOT NULL,
+    issuer_id   integer NOT NULL,
+    type        character varying,
+    pay_date    date NOT NULL,
+    PRIMARY KEY (id)
+)
+
+ALTER TABLE payment
+    ADD CONSTRAINT payment_employee_fk FOREIGN KEY (employee_id)
+        REFERENCES employee (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE;
+
+ALTER TABLE payment
+    ADD CONSTRAINT payment_issuer_fk FOREIGN KEY (issuer_id)
         REFERENCES employee (id) MATCH SIMPLE
         ON UPDATE CASCADE
         ON DELETE CASCADE;

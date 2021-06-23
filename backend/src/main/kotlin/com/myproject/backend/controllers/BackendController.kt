@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
+import java.util.*
 import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
 
@@ -163,10 +164,13 @@ class BackendController() {
     }
 
     @GetMapping("/companies")
-    @PreAuthorize("hasRole('SUPER')")
     @ResponseBody
-    fun getCompanies(authentication: Authentication):  Collection<Company> {
+    fun getCompanies(@RequestParam name: String?):  Any {
         // TODO validate
+        if (name != null ) {
+            val company: Optional<Company> = companyRepository.findByName(name)
+            return company
+        }
         val companies: Collection<Company> = companyRepository.findAll()
         return companies
     }

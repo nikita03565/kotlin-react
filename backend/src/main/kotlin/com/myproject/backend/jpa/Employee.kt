@@ -42,8 +42,11 @@ data class Employee(
     )
     var roles: MutableCollection<Role>? = null,
 
+    @Column(name="company_id")
+    var companyId: Long? = null,
+
     @ManyToOne
-    @JoinColumn(name="company_id")
+    @JoinColumn(name="company_id", insertable = false, updatable = false)
     var company: Company? = null,
 
 //    @OneToMany(mappedBy = "employee") Moved to separate endpoint

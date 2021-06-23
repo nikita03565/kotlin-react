@@ -22,11 +22,11 @@ data class Account (
     @Column(name = "amount")
     var amount: Float? = null,
 
+    @Column(name = "received_amount")
+    var received_amount: Float = 0f,
+
     @Column(name = "allocation_type")
     var allocationType: String,
-
-    @Column(name = "is_remainder")
-    var isRemainder: Boolean? = null,
 
     @Column(name = "priority")
     var priority: Int,
