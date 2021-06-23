@@ -49,7 +49,7 @@ class BackendController() {
     lateinit var companyService: CompanyService
 
     @GetMapping("/users/me")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('SUPER')")
     @ResponseBody
     fun getCurrentUserContent(authentication: Authentication): Any {
         val user: Employee = employeeRepository.findByUsername(authentication.name).get()
@@ -60,10 +60,10 @@ class BackendController() {
     @PreAuthorize("hasRole('SUPER') or hasRole('ADMIN')")
     @ResponseBody
     fun getUsers(request: HttpServletRequest, authentication: Authentication): Any {
-        val usersCompany: Company = employeeRepository.findByUsername(authentication.name).get().company!!
         return if (request.isUserInRole("ROLE_SUPER")) {
             employeeRepository.findAll()
         }else if (request.isUserInRole("ROLE_ADMIN")) {
+            val usersCompany: Company = employeeRepository.findByUsername(authentication.name).get().company!!
             employeeRepository.findAllByCompany(usersCompany)
         } else {
             emptyList<Employee>()

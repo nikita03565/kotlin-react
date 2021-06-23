@@ -76,6 +76,24 @@ class Navbar extends Component {
                   My Accounts
                 </NavLink>
               </li>
+              <li
+                className="nav-item"
+                data-toggle="collapse"
+                data-target=".navbar-collapse.show"
+              >
+                <NavLink className="nav-link" to="/companies">
+                  Companies
+                </NavLink>
+              </li>
+              <li
+                className="nav-item"
+                data-toggle="collapse"
+                data-target=".navbar-collapse.show"
+              >
+                <NavLink className="nav-link" to="/directory">
+                  Employees Directory
+                </NavLink>
+              </li>
             </ul>
             {username ? (
               <div

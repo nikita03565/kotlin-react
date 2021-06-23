@@ -7,6 +7,7 @@ import NotFound from "./NotFound";
 import Home from "./Home";
 import Users from "./Users";
 import Accounts from "./Accounts";
+import Companies from "./Companies";
 import UserDetail from "./Users/UserDetail";
 import { tryParseJSONroles } from "./utils";
 import history from "./history";
@@ -30,8 +31,11 @@ function Router() {
           <Route exact path="/users" component={Users} />
           <Route exact path="/users/:id" component={UserDetail} />
           <Route exact path="/accounts" component={Accounts} />
-          {showFor(["ROLE_ADMIN"]) && (
+          {showFor(["ROLE_ADMIN", "ROLE_SUPER"]) && (
             <Route exact path="/directory" component={Users} />
+          )}
+          {showFor(["ROLE_SUPER"]) && (
+            <Route exact path="/companies" component={Companies} />
           )}
           <Route path="*" component={NotFound} />
         </Switch>

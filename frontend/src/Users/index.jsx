@@ -15,7 +15,7 @@ class Users extends Component {
   state = {
     users: [],
   };
-  ignoredKeys = ["id"];
+  ignoredKeys = ["id", "companyId "];
 
   componentDidMount() {
     this.onLoadAllUsers();
@@ -173,7 +173,7 @@ class Users extends Component {
         <TableCell>${row.salary}</TableCell>
         <TableCell>{row.title}</TableCell>
         <TableCell>{roles}</TableCell>
-        <TableCell>{row.company.name}</TableCell>
+        <TableCell>{row.company?.name}</TableCell>
         <TableCell>{actions}</TableCell>
       </TableRow>
     );

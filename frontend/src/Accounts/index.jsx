@@ -4,7 +4,7 @@ import { loadData, deleteEl, addEl } from "../API_Requests/basic";
 import Account from "./Account";
 import Navbar from "../Navbar";
 import { Button, Modal } from "@material-ui/core";
-import { sortBy} from "lodash"
+import { sortBy } from "lodash";
 
 class Users extends Component {
   state = {
@@ -36,7 +36,8 @@ class Users extends Component {
     try {
       const res = await addEl("accounts", data);
       this.setState({
-        accounts: [res.data, ...accounts], creating: false
+        accounts: [res.data, ...accounts],
+        creating: false,
       });
     } catch (err) {
       console.log(err);
@@ -74,7 +75,7 @@ class Users extends Component {
   render() {
     const { accounts, creating } = this.state;
     console.log(accounts);
-    const accountsSorted = sortBy(accounts, "priority")
+    const accountsSorted = sortBy(accounts, "priority");
     return (
       <div>
         <Navbar />
@@ -101,7 +102,7 @@ class Users extends Component {
           aria-labelledby="simple-modal-title"
           aria-describedby="simple-modal-description"
         >
-          <Account creating={true} createAccount={this.onCreateAccount}/>
+          <Account creating={true} createAccount={this.onCreateAccount} />
         </Modal>
       </div>
     );
