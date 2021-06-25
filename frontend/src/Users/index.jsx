@@ -347,8 +347,7 @@ class Users extends Component {
     const { users, editingData, editing } = this.state;
 
     return (
-      <div>
-        <Navbar />
+      <div>  
         <TableContainer component={Paper}>
           <Table aria-label="simple table">
             <TableHead>

@@ -4,6 +4,7 @@ import AuthService from "../AuthService";
 import history from "../history";
 import Navbar from "../Navbar";
 import parseErrors from "../parseErrors";
+import {loadData} from "../API_Requests/basic"
 
 class SignIn extends Component {
   constructor(props) {
@@ -30,8 +31,10 @@ class SignIn extends Component {
     try {
       await this.Auth.signin(username, password);
       history.push("/");
+      await this.getUserData()
+      window.location.reload()
     } catch (err) {
-      const errorText = parseErrors(err);
+      const errorText = err.response.data.message;
       this.setState({ errorText });
     }
   }
@@ -42,11 +45,16 @@ class SignIn extends Component {
     });
   }
 
+  getUserData = async () => {
+    const res = await loadData("users/me");
+    const roles = res.data.roles.map((r) => r.name);
+    localStorage.setItem("roles", JSON.stringify(roles));
+  };
+
   render() {
     const { errorText, username, password } = this.state;
     return (
       <div>
-        <Navbar />
         <div
           style={{
             width: "100%",
@@ -84,7 +92,7 @@ class SignIn extends Component {
                   color="primary"
                   type="submit"
                 >
-                  Вход
+                  Sign In
                 </Button>
               </form>
               {errorText !== "" ? (

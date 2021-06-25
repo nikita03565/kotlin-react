@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 
 import AuthService from "./AuthService";
 import WithAuth from "./WithAuth";
-
+import { tryParseJSONroles } from "./utils";
 const Auth = new AuthService();
 
 class Navbar extends Component {
@@ -29,10 +29,18 @@ class Navbar extends Component {
 
   handleLogout = () => {
     Auth.logout();
+    window.location.reload()
+  };
+
+  showFor = (roles) => {
+    const userRoles = tryParseJSONroles(localStorage.getItem("roles"));
+    return (
+      userRoles && userRoles.some((userRole) => roles.includes(userRole))
+    );
   };
 
   render() {
-    const { username, id } = this.props;
+    const { username } = this.props;
     return (
       <div>
         <nav className="navbar navbar-expand-md navbar-light bg-light">
@@ -67,7 +75,7 @@ class Navbar extends Component {
                   Home
                 </NavLink>
               </li>
-              <li
+              {this.showFor(["ROLE_USER"]) && (<li
                 className="nav-item"
                 data-toggle="collapse"
                 data-target=".navbar-collapse.show"
@@ -75,8 +83,8 @@ class Navbar extends Component {
                 <NavLink className="nav-link" to="/accounts">
                   My Accounts
                 </NavLink>
-              </li>
-              <li
+              </li>)}
+              {this.showFor(["ROLE_SUPER"]) && (<li
                 className="nav-item"
                 data-toggle="collapse"
                 data-target=".navbar-collapse.show"
@@ -84,8 +92,8 @@ class Navbar extends Component {
                 <NavLink className="nav-link" to="/companies">
                   Companies
                 </NavLink>
-              </li>
-              <li
+              </li>)}
+              {this.showFor(["ROLE_SUPER", "ROLE_ADMIN"]) && (<li
                 className="nav-item"
                 data-toggle="collapse"
                 data-target=".navbar-collapse.show"
@@ -93,7 +101,7 @@ class Navbar extends Component {
                 <NavLink className="nav-link" to="/directory">
                   Employees Directory
                 </NavLink>
-              </li>
+              </li>)}
             </ul>
             {username ? (
               <div

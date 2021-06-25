@@ -3,10 +3,11 @@ import Navbar from "../Navbar";
 class Home extends Component {
   render() {
     return (
-      <Fragment>
-        <Navbar />
-        Home
-      </Fragment>
+      <div 
+      style={{textAlign: "center" }}
+      >
+        Welcome to PayMe
+      </div>
     );
   }
 }

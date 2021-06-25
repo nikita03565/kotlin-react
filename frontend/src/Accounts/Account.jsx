@@ -12,6 +12,7 @@ import {
   Input,
   FormControl,
   FormHelperText,
+  InputAdornment
 } from "@material-ui/core";
 import Navbar from "../Navbar";
 import parseErrors from "../parseErrors";
@@ -32,15 +33,16 @@ class Account extends Component {
     editing: false,
     creating: false,
     errorText: "",
+    received_amount: 0,
   };
 
   componentDidMount() {
     const { data, creating } = this.props;
     if (data) {
-      this.setState({ ...data, initialData: data});
+      this.setState({ ...data, initialData: data });
     }
     if (creating) {
-      this.setState({creating: creating})
+      this.setState({ creating: creating });
     }
   }
 
@@ -74,6 +76,7 @@ class Account extends Component {
         nickname,
         priority,
         routingNumber,
+        amount,
       } = this.state;
       const data = {
         accountNumber,
@@ -81,6 +84,7 @@ class Account extends Component {
         nickname,
         priority,
         routingNumber,
+        amount,
       };
       await updateEl("accounts", id, data);
       this.setState({ editing: false });
@@ -105,16 +109,25 @@ class Account extends Component {
       nickname,
       priority,
       routingNumber,
+      amount,
     } = this.state;
-    const {createAccount} = this.props;
+    const { createAccount } = this.props;
     const data = {
       accountNumber,
-        allocationType,
-        nickname,
-        priority,
-        routingNumber,
+      allocationType,
+      nickname,
+      priority,
+      routingNumber,
+      amount,
+    };
+    createAccount(data);
+  };
+
+  getAdornment = (allType) => {
+    if (allType == "amount") {
+      return {startAdornment: <InputAdornment position="start">$</InputAdornment>}
     }
-    createAccount(data)
+    return {endAdornment: <InputAdornment position="end">%</InputAdornment>}
   }
 
   render() {
@@ -130,6 +143,7 @@ class Account extends Component {
       editing,
       creating,
       errorText,
+      received_amount
     } = this.state;
     console.log(creating);
     return (
@@ -145,7 +159,7 @@ class Account extends Component {
           }}
         >
           <Card
-            style={{ margin: "10px", minWidth: "1000px", maxWidth: "1000px" }}
+            style={{ margin: "10px", minWidth: "600px", maxWidth: "600px" }}
           >
             <CardContent>
               <TextField
@@ -195,6 +209,20 @@ class Account extends Component {
                 </Select>
                 <FormHelperText> Allocation Type </FormHelperText>
               </FormControl>
+              {allocationType != "remainder" ? (
+                <TextField
+                  value={amount}
+                  label="Amount"
+                  className="default-input"
+                  variant="outlined"
+                  onChange={(e) => this.handleChange(e, "amount")}
+                  InputProps={{
+                    type: "number",
+                    readOnly: !(editing || creating),
+                    ...this.getAdornment(allocationType)
+                  }} //{allocationType == "percentage" ? "%" : "$"}
+                />
+              ) : null}
 
               <FormControl className="default-input">
                 <Input
@@ -211,7 +239,7 @@ class Account extends Component {
                 />
                 <FormHelperText> Priority </FormHelperText>
               </FormControl>
-
+                <span>Received Amount: {received_amount}</span>
               <br />
 
               <>

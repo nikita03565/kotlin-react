@@ -75,7 +75,6 @@ class Users extends Component {
 
     return (
       <div>
-        <Navbar />
         {!creating && (
           <Button
             style={{ minWidth: "151px" }}

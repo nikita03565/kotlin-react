@@ -19,14 +19,17 @@ class UpdateAccount: Serializable {
     @JsonProperty("allocationType")
     var allocationType: String? = null
 
+    @JsonProperty("amount")
+    var amount: Float? = null
     constructor() {}
 
-    constructor(accountNumber: String, routingNumber: String, nickname: String, priority: Int, allocationType: String) {
+    constructor(accountNumber: String, routingNumber: String, nickname: String, priority: Int, allocationType: String, amount: Float) {
         this.accountNumber = accountNumber
         this.routingNumber = routingNumber
         this.nickname = nickname
         this.priority = priority
         this.allocationType = allocationType
+        this.amount = amount
     }
 
     companion object {

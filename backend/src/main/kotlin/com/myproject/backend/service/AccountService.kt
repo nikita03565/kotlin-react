@@ -22,6 +22,7 @@ class AccountService {
             accountToUpdate.nickname = account.nickname!!
             accountToUpdate.priority = account.priority!!
             accountToUpdate.allocationType = account.allocationType!!
+            accountToUpdate.amount = account.amount!!
         }
         return accountToUpdate;
     }
@@ -47,6 +48,7 @@ class AccountService {
                 employeeId = employeeId!!,
                 priority = body.priority!!,
                 allocationType = body.allocationType!!,
+                amount = body.amount!!,
             )
         )
         return account

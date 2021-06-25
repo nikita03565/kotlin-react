@@ -23,6 +23,7 @@ class SignUp extends Component {
       company: "",
       company_id: null,
       companyErrorText: "",
+      sucessMessage: "",
     };
   }
 
@@ -33,11 +34,19 @@ class SignUp extends Component {
   }
 
   async handleFormSubmit(e) {
-    const { username, password, first_name, last_name, company_id } = this.state;
+    const { username, password, first_name, last_name, company_id } =
+      this.state;
     e.preventDefault();
     try {
-      await this.Auth.signup(username, password, first_name, last_name, company_id);
+      await this.Auth.signup(
+        username,
+        password,
+        first_name,
+        last_name,
+        company_id
+      );
       history.push("/");
+      this.setState({ successMessage: "User registered! Sign in now" });
     } catch (err) {
       const errorText = parseErrors(err);
       this.setState({ errorText });
@@ -65,6 +74,7 @@ class SignUp extends Component {
         this.setState({
           company_id: res.data.id,
           companyErrorText: "",
+          successMessage: "Company selected!",
         });
       }
     } catch (err) {
@@ -83,11 +93,11 @@ class SignUp extends Component {
       password2,
       company,
       companyErrorText,
+      successMessage,
     } = this.state;
-    console.log(this.state)
+    console.log(this.state);
     return (
       <div>
-        <Navbar />
         <div
           style={{
             width: "100%",
@@ -95,12 +105,13 @@ class SignUp extends Component {
             position: "fixed",
             display: "flex",
             alignItems: "center",
+            flexDirection: "column",
             alignContent: "center",
             justifyContent: "center",
             overflow: "auto",
           }}
         >
-          <Card style={{ width: 250, paddingLeft: 10 }}>
+          <Card style={{ width: 250, paddingLeft: 10, marginBottom: 20 }}>
             <CardContent>
               <TextField
                 name="company"
@@ -110,16 +121,17 @@ class SignUp extends Component {
                 placeholder="Company Name"
                 required
               />
+              <Button
+                style={{ marginTop: 20 }}
+                variant="contained"
+                color="primary"
+                type="submit"
+                onClick={this.selectCompany}
+              >
+                Select Company
+              </Button>
             </CardContent>
-            <Button
-              style={{ marginTop: 20 }}
-              variant="contained"
-              color="primary"
-              type="submit"
-              onClick={this.selectCompany}
-            >
-              Select Company
-            </Button>
+
             {companyErrorText !== "" ? (
               <p style={{ color: "red", margin: 0, marginTop: 10 }}>
                 {companyErrorText}
@@ -191,6 +203,7 @@ class SignUp extends Component {
               )}
             </CardContent>
           </Card>
+          {successMessage != "" ? <p>{successMessage}</p> : ""}
         </div>
       </div>
     );

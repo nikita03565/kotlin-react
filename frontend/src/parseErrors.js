@@ -1,6 +1,6 @@
 const parseErrors = (error) => {
   if (!error) {
-    return "Неизвестная ошибка";
+    return "Unknown error";
   }
 
   if (!error.response) {
@@ -12,7 +12,7 @@ const parseErrors = (error) => {
   }
 
   if (error.response.status === 500) {
-    return "Ошибка сервера";
+    return "Server error";
   }
 
   const { data } = error.response;

@@ -78,6 +78,7 @@ export default class AuthService {
   logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
-    localStorage.removeItem("id");
+    localStorage.removeItem("roles");
+    window.location = "/"
   };
 }

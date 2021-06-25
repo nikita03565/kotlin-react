@@ -127,7 +127,6 @@ class UserDetail extends Component {
     const authId = localStorage.getItem("id");
     return (
       <div>
-        {detail && <Navbar />}
         <div
           style={{
             minWidth: "500px",
@@ -146,8 +145,8 @@ class UserDetail extends Component {
                 <a href={`/users/${id}`}>{`${username}`} </a>
               </p>
               <p> {`${first_name} ${last_name}`} </p>
-              <p> {company && `${title} at ${company.name}`} </p>
-              <p> Earning: {salary} </p>
+              <p> {company && `${title || "Employee"} at ${company.name}`} </p>
+              <p> Earning: ${salary} </p>
               <br />
               {detail && Number(id) === Number(authId) && (
                 <Button
@@ -156,7 +155,7 @@ class UserDetail extends Component {
                   variant="contained"
                   onClick={this.onEditButtonClick}
                 >
-                  {editing ? "Завершить" : "Редактировать"}
+                  {editing ? "Save" : "Edit"}
                 </Button>
               )}
             </CardContent>

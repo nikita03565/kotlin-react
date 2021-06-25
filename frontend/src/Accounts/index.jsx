@@ -77,11 +77,11 @@ class Users extends Component {
     console.log(accounts);
     const accountsSorted = sortBy(accounts, "priority");
     return (
-      <div>
-        <Navbar />
+      <>
+      <div style={{display: "grid"   }}>
         {!creating && (
           <Button
-            style={{ minWidth: "151px" }}
+            style={{ minWidth: "151px",  margin: "auto", marginTop: 20, marginBottom: 20  }}
             color={"primary"}
             variant="contained"
             onClick={this.onCreateButtonClick}
@@ -89,6 +89,7 @@ class Users extends Component {
             Create new account
           </Button>
         )}
+      </div>
         {accountsSorted.map((account) => (
           <Account
             data={account}
@@ -104,7 +105,7 @@ class Users extends Component {
         >
           <Account creating={true} createAccount={this.onCreateAccount} />
         </Modal>
-      </div>
+      </>
     );
   }
 }
