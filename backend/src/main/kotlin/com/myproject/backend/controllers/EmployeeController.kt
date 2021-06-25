@@ -26,7 +26,7 @@ import javax.validation.Valid
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = ["*"], maxAge = 3600)
-class BackendController() {
+class EmployeeController() {
 
     @Autowired
     lateinit var employeeRepository: EmployeeRepository
@@ -71,52 +71,14 @@ class BackendController() {
         }
     }
 
-    @GetMapping("/users/me/accounts")
-    @PreAuthorize("hasRole('USER')")
-    @ResponseBody
-    fun getCurrentUserAccounts(authentication: Authentication): Any {
-        val user: Employee = employeeRepository.findByUsername(authentication.name).get()
-        val accounts = accountRepository.findAccountByEmployeeId(user.id)
-        return accounts
-    }
-
-    @PostMapping("/accounts")
-    @PreAuthorize("hasRole('USER')")
-    @ResponseBody
-    fun createAccount(authentication: Authentication, @Valid @RequestBody body: UpdateAccount): Account? {
-        // TODO validate
-        val employeeId: Long? = employeeRepository.findByUsername(authentication.name).get().id
-        val account = accountService.createAccount(body, employeeId)
-        return account
-    }
-
-    @PatchMapping("/accounts/{id}")
-    @PreAuthorize("hasRole('USER')")
-    @ResponseBody
-    fun updateAccount(@PathVariable id: String, authentication: Authentication, @Valid @RequestBody body: UpdateAccount): Account? {
-        // TODO validate
-        val user: Employee = employeeRepository.findByUsername(authentication.name).get()
-        val account = accountService.updateAccount(body, id.toLong())
-        return account
-    }
-
     @PatchMapping("/users/{id}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER')")
     @ResponseBody
-    fun updateAccount(@PathVariable id: String, authentication: Authentication, @Valid @RequestBody body: UpdateUser): Employee? {
+    fun updateEmployee(@PathVariable id: String, authentication: Authentication, @Valid @RequestBody body: UpdateUser): Employee? {
         // TODO validate
         val user: Employee = employeeRepository.findByUsername(authentication.name).get()
         val employee = employeeService.updateEmployee(body, id.toLong())
         return employee
-    }
-
-    @DeleteMapping("/accounts/{id}")
-    @PreAuthorize("hasRole('USER')")
-    @ResponseBody
-    fun deleteAccount(@PathVariable id: String, authentication: Authentication) {
-        // TODO validate
-        val user: Employee = employeeRepository.findByUsername(authentication.name).get()
-        accountService.deleteAccount(id.toLong())
     }
 
     @PostMapping("/users/{id}/make_admin")
@@ -172,33 +134,5 @@ class BackendController() {
         val role: Role = roleRepository.findByName("ROLE_USER")
         employeeService.removeRole(employee, role)
         return role
-    }
-
-    @GetMapping("/companies")
-    @ResponseBody
-    fun getCompanies(@RequestParam name: String?):  Any {
-        // TODO validate
-        if (name != null ) {
-            val company: Optional<Company> = companyRepository.findByName(name)
-            return company
-        }
-        val companies: Collection<Company> = companyRepository.findAll()
-        return companies
-    }
-
-    @PostMapping("/companies")
-    @PreAuthorize("hasRole('SUPER')")
-    @ResponseBody
-    fun createCompany(authentication: Authentication, @Valid @RequestBody body: CreateCompany): Company {
-        // TODO validate
-        val company = companyService.createCompany(body)
-        return company
-    }
-
-    @GetMapping("/admincontent")
-    @PreAuthorize("hasRole('ADMIN')")
-    @ResponseBody
-    fun getAdminContent(): String {
-        return "Admin's content"
     }
 }

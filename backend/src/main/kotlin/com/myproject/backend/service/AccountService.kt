@@ -27,6 +27,12 @@ class AccountService {
     }
 
     @Transactional
+    fun addAmount(account: Account, paymentAmount: Float): Account {
+        account.received_amount += paymentAmount
+        return account
+    }
+
+    @Transactional
     fun deleteAccount(id: Long) {
         accountRepository.deleteById(id)
     }
