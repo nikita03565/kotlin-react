@@ -64,9 +64,20 @@ class Users extends Component {
 
   getCompanyCard = (company) => {
     return (
-      <Card>
-        <CardContent>{company.name}</CardContent>
-      </Card>
+      <div
+        style={{
+          minWidth: "500px",
+          display: "flex",
+          alignItems: "center",
+          alignContent: "center",
+          justifyContent: "center",
+          overflow: "auto",
+        }}
+      >
+        <Card style={{ marginBottom: 20, maxWidth: 500, minWidth: 500 }}>
+          <CardContent>{company.name}</CardContent>
+        </Card>
+      </div>
     );
   };
 
@@ -74,17 +85,19 @@ class Users extends Component {
     const { companies, creating } = this.state;
 
     return (
-      <div>
-        {!creating && (
-          <Button
-            style={{ minWidth: "151px" }}
-            color={"primary"}
-            variant="contained"
-            onClick={this.onCreateButtonClick}
-          >
-            Create new company
-          </Button>
-        )}
+      <>
+        <div style={{ display: "grid" }}>
+          {!creating && (
+            <Button
+              style={{ minWidth: "151px", margin: "auto" }}
+              color={"primary"}
+              variant="contained"
+              onClick={this.onCreateButtonClick}
+            >
+              Create new company
+            </Button>
+          )}
+        </div>
         {companies.map((c) => this.getCompanyCard(c))}
         <Modal
           open={creating}
@@ -94,7 +107,7 @@ class Users extends Component {
         >
           <Company creating={true} createCompany={this.onCreateCompany} />
         </Modal>
-      </div>
+      </>
     );
   }
 }
