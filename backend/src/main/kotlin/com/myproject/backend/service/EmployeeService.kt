@@ -38,6 +38,7 @@ class EmployeeService {
              employeeToUpdate.lastName = account.lastName!!
              employeeToUpdate.title = account.title!!
              employeeToUpdate.salary = account.salary!!
+             employeeToUpdate.companyId = account.companyId!!
         }
         return  employeeToUpdate;
     }

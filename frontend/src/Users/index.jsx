@@ -9,11 +9,22 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import { Button, Modal, Card, CardContent, TextField } from "@material-ui/core";
+import {
+  Button,
+  Modal,
+  Card,
+  CardContent,
+  TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  FormHelperText,
+} from "@material-ui/core";
 import { withAuthHeader } from "../Auth";
 class Users extends Component {
   state = {
     users: [],
+    companies: [],
     editing: false,
     editingData: null,
   };
@@ -21,6 +32,22 @@ class Users extends Component {
 
   componentDidMount() {
     this.onLoadAllUsers();
+    this.onLoadAllCompanies();
+  }
+
+  async onLoadAllCompanies() {
+    try {
+      const res = await loadData("companies");
+      this.setState({
+        companies: res.data,
+      });
+    } catch (err) {
+      console.log(err);
+      console.log(err.response);
+      if (axios.isCancel(err)) {
+        return;
+      }
+    }
   }
 
   async onLoadAllUsers() {
@@ -223,20 +250,23 @@ class Users extends Component {
 
   getUserCard = (editingData) => {
     const actions = this.getPermissionActions(editingData);
+    const { companies } = this.state;
     return (
-      <Card style={{ margin: "10px", minWidth: "1000px", maxWidth: "1000px" }}>
-        <CardContent>
-          <div>
-            <div
-              style={{
-                minWidth: "500px",
-                display: "flex",
-                alignItems: "center",
-                alignContent: "center",
-                justifyContent: "center",
-                overflow: "auto",
-              }}
-            >
+      <div>
+        <div
+          style={{
+            minWidth: "500px",
+            display: "flex",
+            alignItems: "center",
+            alignContent: "center",
+            justifyContent: "center",
+            overflow: "auto",
+          }}
+        >
+          <Card
+            style={{ margin: "10px", minWidth: "1000px", maxWidth: "1000px" }}
+          >
+            <CardContent>
               <TextField
                 value={editingData?.firstName}
                 className="default-input"
@@ -265,13 +295,19 @@ class Users extends Component {
                 variant="outlined"
                 onChange={(e) => this.handleChange(e, "salary")}
               />
-              <TextField // TODO SELECT!
-                value={editingData?.company}
-                className="default-input"
-                label="company"
-                variant="outlined"
-                onChange={(e) => this.handleChange(e, "company")}
-              />
+              <FormControl className="default-input">
+                <Select
+                  style={{ width: "229px" }}
+                  variant="outlined"
+                  onChange={(e) => this.handleChange(e, "companyId")}
+                  value={editingData?.company?.id}
+                >
+                  {companies.map((c) => (
+                    <MenuItem value={c.id}> {c.name}</MenuItem>
+                  ))}
+                </Select>
+                <FormHelperText> Company </FormHelperText>
+              </FormControl>
               <Button
                 style={{ minWidth: "151px" }}
                 color={"primary"}
@@ -280,11 +316,13 @@ class Users extends Component {
               >
                 Save
               </Button>
+              <br/>
+              <h3> Permission actions </h3>
               {actions}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     );
   };
 
@@ -295,11 +333,11 @@ class Users extends Component {
       lastName: editingData.lastName,
       title: editingData.title,
       salary: Number(editingData.salary),
-      // TODO companyId
-    }
-    const res = await updateEl('users', editingData.id, data)
-    console.log(res, res.data)
-  }
+      companyId: editingData.companyId
+    };
+    const res = await updateEl("users", editingData.id, data);
+    console.log(res, res.data);
+  };
 
   handleClose = () => {
     this.setState({ editing: false });

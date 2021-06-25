@@ -16,15 +16,17 @@ class UpdateUser: Serializable {
     @JsonProperty("salary")
     var salary: Int? = null
 
-    // TODO companyId
+    @JsonProperty("companyId")
+    var companyId: Long? = null
 
     constructor() {}
 
-    constructor(firstName: String, lastName: String, title: String, salary: Int) {
+    constructor(firstName: String, lastName: String, title: String, salary: Int, companyId: Long) {
         this.firstName = firstName
         this.lastName = lastName
         this.title = title
         this.salary = salary
+        this.companyId = companyId
     }
 
     companion object {
