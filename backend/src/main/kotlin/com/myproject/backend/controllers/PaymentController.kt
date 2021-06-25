@@ -52,7 +52,7 @@ class PaymentController {
         val users = employeeRepository.findAllByCompany(usersCompany)
         val payments = arrayListOf<Payment>()
         for (user in users) {
-            val payment = payEmployee(user, user.salary!!.toFloat(), "Reg", issuer)
+            val payment = payEmployee(user, user.salary!!.toFloat(), "Regular", issuer)
             payments.add(payment)
         }
         return payments
@@ -102,7 +102,7 @@ class PaymentController {
                 res.add(toAdd)
                 remainingAmount -= toAdd
             } else if (acc.allocationType == "percentage") {
-                val toAdd = if (acc.amount!! * amount<= remainingAmount) acc.amount!! * amount else remainingAmount
+                val toAdd = if (acc.amount!! * amount * 0.01f <= remainingAmount) acc.amount!! * amount * 0.01f else remainingAmount
                 res.add(toAdd)
                 remainingAmount -= toAdd
             } else if (acc.allocationType == "remainder") {

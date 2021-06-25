@@ -245,7 +245,7 @@ class Account extends Component {
               <>
                 {creating ? (
                   <Button
-                    style={{ minWidth: "151px" }}
+                    style={{ minWidth: "151px", margin: 5}}
                     color={editing ? "primary" : "default"}
                     variant="contained"
                     onClick={this.onCreateButtonClick}
@@ -255,7 +255,7 @@ class Account extends Component {
                 ) : (
                   <>
                     <Button
-                      style={{ minWidth: "151px" }}
+                      style={{ minWidth: "151px", margin: 5 }}
                       color={editing ? "primary" : "default"}
                       variant="contained"
                       onClick={this.onEditButtonClick}

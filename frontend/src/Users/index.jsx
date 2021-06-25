@@ -21,12 +21,19 @@ import {
   FormHelperText,
 } from "@material-ui/core";
 import { withAuthHeader } from "../Auth";
+import { tryParseJSONroles } from "../utils";
+import { PlaylistPlayRounded } from "@material-ui/icons";
+
 class Users extends Component {
   state = {
     users: [],
     companies: [],
     editing: false,
     editingData: null,
+    payType: "",
+    payAmount: 0,
+    payOpen: false,
+    payUserId: null
   };
   ignoredKeys = ["id", "companyId"];
 
@@ -188,6 +195,12 @@ class Users extends Component {
     }));
   };
 
+  handleChangeFlat(e, field) {
+    this.setState({
+      [field]: e.target.value,
+    });
+  }
+
   getTableRow = (row) => {
     const roles = row.roles.map((r) => r.name.replace("ROLE_", "")).join(", ");
     return (
@@ -201,10 +214,101 @@ class Users extends Component {
         <TableCell>{row.company?.name}</TableCell>
         <TableCell>
           <Button onClick={() => this.openEditModal(row)}>Edit</Button>
+          <Button onClick={this.payAll}>Pay all</Button>
+          <Button onClick={() => this.onPayClick(row)}>Pay employee</Button>
         </TableCell>
       </TableRow>
     );
   };
+
+  onPayClick = (employee) => {
+    this.setState({payOpen: true, payUserId: employee.id})
+  }
+
+  payAll = async () => {
+    try {
+      const res = await axios({
+        method: "post",
+        url: `api/payments/pay_all`,
+        headers: withAuthHeader(),
+      });
+    } catch (err) {
+      console.log(err);
+      console.log(err.response);
+      if (axios.isCancel(err)) {
+        return;
+      }
+    }
+  }
+
+  payEmployee = async () => {
+    const {payType, payAmount, payUserId} = this.state;
+    try {
+      const res = await axios({
+        method: "post",
+        data: {
+          type: payType,
+          amount: payAmount,
+        },
+        url: `api/users/${payUserId}/pay`,
+        headers: withAuthHeader(),
+      });
+    } catch (err) {
+      console.log(err);
+      console.log(err.response);
+      if (axios.isCancel(err)) {
+        return;
+      }
+    }
+  }
+
+  getPayModal = () => {
+    const {payAmount, payType} = this.state;
+    return (
+      <div>
+        <div
+          style={{
+            minWidth: "500px",
+            display: "flex",
+            alignItems: "center",
+            alignContent: "center",
+            justifyContent: "center",
+            overflow: "auto",
+          }}
+        >
+          <Card
+            style={{ margin: "10px", minWidth: "1000px", maxWidth: "1000px" }}
+          >
+            <CardContent>
+              <TextField
+                value={payAmount}
+                className="default-input"
+                label="Amount"
+                variant="outlined"
+                onChange={(e) => this.handleChangeFlat(e, "payAmount")}
+                inputProps={{type: "number"}}
+              />
+              <TextField
+                value={payType}
+                className="default-input"
+                label="Pay Type"
+                variant="outlined"
+                onChange={(e) => this.handleChangeFlat(e, "payType")}
+              />
+              <Button
+                style={{ minWidth: "151px" }}
+                color={"primary"}
+                variant="contained"
+                onClick={this.payEmployee}
+              >
+                Pay
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
 
   getPermissionActions = (editingData) => {
     if (editingData == null || editingData.roles == null) return [];
@@ -316,7 +420,7 @@ class Users extends Component {
               >
                 Save
               </Button>
-              <br/>
+              <br />
               <h3> Permission actions </h3>
               {actions}
             </CardContent>
@@ -333,7 +437,7 @@ class Users extends Component {
       lastName: editingData.lastName,
       title: editingData.title,
       salary: Number(editingData.salary),
-      companyId: editingData.companyId
+      companyId: editingData.companyId,
     };
     const res = await updateEl("users", editingData.id, data);
     console.log(res, res.data);
@@ -343,11 +447,16 @@ class Users extends Component {
     this.setState({ editing: false });
   };
 
+  showFor = (roles) => {
+    const userRoles = tryParseJSONroles(localStorage.getItem("roles"));
+    return userRoles && userRoles.some((userRole) => roles.includes(userRole));
+  };
+
   render() {
-    const { users, editingData, editing } = this.state;
+    const { users, editingData, editing, payOpen } = this.state;
 
     return (
-      <div>  
+      <div>
         <TableContainer component={Paper}>
           <Table aria-label="simple table">
             <TableHead>
@@ -363,6 +472,14 @@ class Users extends Component {
           aria-describedby="simple-modal-description"
         >
           {this.getUserCard(editingData)}
+        </Modal>
+        <Modal
+          open={payOpen}
+          onClose={() => this.setState({payOpen: false})}
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+        >
+          {this.getPayModal()}
         </Modal>
       </div>
     );
