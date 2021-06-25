@@ -31,8 +31,32 @@ class Users extends Component {
     }
   }
 
+  validateAccounts = (accounts, data) => {
+    console.log(accounts, data);
+    const percents = [...accounts, data].filter(
+      (a) => a.allocationType == "percentage"
+    );
+    console.log(percents);
+    const sumPercents = percents.reduce((a, b) => a + Number(b.amount), 0);
+    console.log(sumPercents);
+    if (sumPercents > 100) {
+      return "Sum of percentages is greater than 100%";
+    }
+    return null;
+  };
+
   onCreateAccount = async (data) => {
     const { accounts } = this.state;
+    const error = this.validateAccounts(accounts, data);
+    console.log("ERROR", error);
+    if (error != null) {
+      this.errorMessage = error;
+      this.setState({
+        creating: false,
+        errorMessage: this.errorMessage,
+      });
+      return null;
+    }
     try {
       const res = await addEl("accounts", data);
       this.setState({
@@ -73,23 +97,36 @@ class Users extends Component {
   };
 
   render() {
-    const { accounts, creating } = this.state;
+    const { accounts, creating, errorMessage } = this.state;
     console.log(accounts);
     const accountsSorted = sortBy(accounts, "priority");
     return (
       <>
-      <div style={{display: "grid"   }}>
-        {!creating && (
-          <Button
-            style={{ minWidth: "151px",  margin: "auto", marginTop: 20, marginBottom: 20  }}
-            color={"primary"}
-            variant="contained"
-            onClick={this.onCreateButtonClick}
-          >
-            Create new account
-          </Button>
-        )}
-      </div>
+        <div style={{ display: "grid" }}>
+          {!creating && (
+            <Button
+              style={{
+                minWidth: "151px",
+                margin: "auto",
+                marginTop: 20,
+                marginBottom: 20,
+              }}
+              color={"primary"}
+              variant="contained"
+              onClick={this.onCreateButtonClick}
+            >
+              Create new account
+            </Button>
+          )}
+          {errorMessage !== "" ? (
+            <p style={{ color: "red", margin: "auto", marginTop: 10 }}>
+              {errorMessage}
+            </p>
+          ) : (
+            ""
+          )}
+        </div>
+
         {accountsSorted.map((account) => (
           <Account
             data={account}
