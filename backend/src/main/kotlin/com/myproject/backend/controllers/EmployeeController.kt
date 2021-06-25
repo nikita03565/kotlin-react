@@ -75,7 +75,6 @@ class EmployeeController() {
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER')")
     @ResponseBody
     fun updateEmployee(@PathVariable id: String, authentication: Authentication, @Valid @RequestBody body: UpdateUser): Employee? {
-        // TODO validate
         val user: Employee = employeeRepository.findByUsername(authentication.name).get()
         val employee = employeeService.updateEmployee(body, id.toLong())
         return employee
@@ -85,7 +84,6 @@ class EmployeeController() {
     @PreAuthorize("hasRole('SUPER')")
     @ResponseBody
     fun makeAdmin(authentication: Authentication, @PathVariable id: String): Any {
-        // TODO validate permissions!
         val employee: Employee = employeeRepository.findById(id.toLong()).get()
         val role: Role = roleRepository.findByName("ROLE_ADMIN")
         employeeService.addRole(employee, role)
@@ -96,7 +94,6 @@ class EmployeeController() {
     @PreAuthorize("hasRole('SUPER')")
     @ResponseBody
     fun makeSuper(authentication: Authentication, @PathVariable id: String): Any {
-        // TODO validate permissions!
         val employee: Employee = employeeRepository.findById(id.toLong()).get()
         val role: Role = roleRepository.findByName("ROLE_SUPER")
         employeeService.addRole(employee, role)
@@ -107,7 +104,6 @@ class EmployeeController() {
     @PreAuthorize("hasRole('SUPER')")
     @ResponseBody
     fun removeSuper(authentication: Authentication, @PathVariable id: String): Any {
-        // TODO validate permissions!
         val employee: Employee = employeeRepository.findById(id.toLong()).get()
         val role: Role = roleRepository.findByName("ROLE_SUPER")
         employeeService.removeRole(employee, role)
@@ -118,7 +114,6 @@ class EmployeeController() {
     @PreAuthorize("hasRole('SUPER')")
     @ResponseBody
     fun removeAdmin(authentication: Authentication, @PathVariable id: String): Any {
-        // TODO validate permissions!
         val employee: Employee = employeeRepository.findById(id.toLong()).get()
         val role: Role = roleRepository.findByName("ROLE_ADMIN")
         employeeService.removeRole(employee, role)
@@ -129,7 +124,6 @@ class EmployeeController() {
     @PreAuthorize("hasRole('SUPER')")
     @ResponseBody
     fun removeUser(authentication: Authentication, @PathVariable id: String): Any {
-        // TODO validate permissions!
         val employee: Employee = employeeRepository.findById(id.toLong()).get()
         val role: Role = roleRepository.findByName("ROLE_USER")
         employeeService.removeRole(employee, role)

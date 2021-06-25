@@ -50,9 +50,9 @@ class AccountController() {
     @PreAuthorize("hasRole('USER')")
     @ResponseBody
     fun createAccount(authentication: Authentication, @Valid @RequestBody body: UpdateAccount): Account? {
-        // TODO validate
         val employeeId: Long? = employeeRepository.findByUsername(authentication.name).get().id
         val account = accountService.createAccount(body, employeeId)
+        updatePriorities(employeeId!!)
         return account
     }
 
@@ -60,9 +60,9 @@ class AccountController() {
     @PreAuthorize("hasRole('USER')")
     @ResponseBody
     fun updateAccount(@PathVariable id: String, authentication: Authentication, @Valid @RequestBody body: UpdateAccount): Account? {
-        // TODO validate
         val user: Employee = employeeRepository.findByUsername(authentication.name).get()
         val account = accountService.updateAccount(body, id.toLong())
+        updatePriorities(user.id!!)
         return account
     }
 
@@ -70,9 +70,18 @@ class AccountController() {
     @PreAuthorize("hasRole('USER')")
     @ResponseBody
     fun deleteAccount(@PathVariable id: String, authentication: Authentication) {
-        // TODO validate
         val user: Employee = employeeRepository.findByUsername(authentication.name).get()
         accountService.deleteAccount(id.toLong())
+        updatePriorities(user.id!!)
+    }
+
+    fun updatePriorities(employeeId: Long) {
+        val accounts = accountRepository.findAccountByEmployeeId(employeeId).sortedWith(compareBy({ it.allocationType == "remainder" }, { it.priority }))
+
+        accounts.forEachIndexed {idx, acc ->
+            val body = UpdateAccount(priority = idx + 1)
+            val updated = accountService.updateAccount(body, acc.id!!)
+        }
     }
 
 }

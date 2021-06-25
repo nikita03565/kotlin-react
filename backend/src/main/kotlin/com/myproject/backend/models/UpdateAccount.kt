@@ -23,6 +23,10 @@ class UpdateAccount: Serializable {
     var amount: Float? = null
     constructor() {}
 
+    constructor(priority: Int) {
+        this.priority = priority
+    }
+
     constructor(accountNumber: String, routingNumber: String, nickname: String, priority: Int, allocationType: String, amount: Float) {
         this.accountNumber = accountNumber
         this.routingNumber = routingNumber

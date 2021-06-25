@@ -17,12 +17,12 @@ class AccountService {
     fun updateAccount(account: UpdateAccount, id: Long): Account? {
         val accountToUpdate = accountRepository.findByIdOrNull(id)
         if (accountToUpdate != null) {
-            accountToUpdate.routingNumber = account.routingNumber!!
-            accountToUpdate.accountNumber = account.accountNumber!!
-            accountToUpdate.nickname = account.nickname!!
-            accountToUpdate.priority = account.priority!!
-            accountToUpdate.allocationType = account.allocationType!!
-            accountToUpdate.amount = account.amount!!
+            if (account.routingNumber != null) accountToUpdate.routingNumber = account.routingNumber!!
+            if (account.accountNumber != null) accountToUpdate.accountNumber = account.accountNumber!!
+            if (account.nickname != null) accountToUpdate.nickname = account.nickname!!
+            if (account.priority != null) accountToUpdate.priority = account.priority!!
+            if (account.allocationType != null) accountToUpdate.allocationType = account.allocationType!!
+            if (account.amount != null) accountToUpdate.amount = account.amount!!
         }
         return accountToUpdate;
     }

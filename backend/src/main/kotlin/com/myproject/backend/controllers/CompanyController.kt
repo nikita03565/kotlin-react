@@ -52,7 +52,6 @@ class CompanyController() {
     @GetMapping("/companies")
     @ResponseBody
     fun getCompanies(@RequestParam name: String?):  Any {
-        // TODO validate
         if (name != null ) {
             val company: Optional<Company> = companyRepository.findByName(name)
             return company
@@ -65,7 +64,6 @@ class CompanyController() {
     @PreAuthorize("hasRole('SUPER')")
     @ResponseBody
     fun createCompany(authentication: Authentication, @Valid @RequestBody body: CreateCompany): Company {
-        // TODO validate
         val company = companyService.createCompany(body)
         return company
     }

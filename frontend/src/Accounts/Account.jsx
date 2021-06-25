@@ -233,9 +233,8 @@ class Account extends Component {
                   className="default-input"
                   variant="outlined"
                   onChange={(e) => this.handleChange(e, "priority")}
-                  InputProps={{
-                    readOnly: !editing,
-                  }}
+                  readOnly = {!(editing || creating)}
+                  
                 />
                 <FormHelperText> Priority </FormHelperText>
               </FormControl>
