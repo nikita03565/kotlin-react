@@ -119,7 +119,11 @@ class PaymentController {
     @PreAuthorize("hasRole('USER')")
     @ResponseBody
     fun getUserPayments(request: HttpServletRequest, authentication: Authentication, @PathVariable id: String): Any {
-        val employee: Employee = employeeRepository.findByUsername(authentication.name).get()
+        val employee =  if (id == "me") {
+            employeeRepository.findByUsername(authentication.name).get()
+        } else {
+            employeeRepository.findById(id.toLong()).get()
+        }
         val payments = paymentRepository.findAccountByEmployeeId(employee.id)
         return payments
     }
